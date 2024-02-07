@@ -1,0 +1,277 @@
+---
+title: "DATA 607 Week1"
+author: "Puja Roy"
+date: "`r Sys.Date()`"
+output: openintro::lab_report
+---
+
+### Link to Article: 
+https://fivethirtyeight.com/features/the-economic-guide-to-picking-a-college-major/
+
+### Overview
+
+This data set is about the majors that recent grads from colleges/universities have studied/pursued. It provides information about recent grads including both men and women employment rates, major category, and how many students performed non college or low wage jobs.
+
+### Load R packages
+
+```{r load-packages, message=FALSE}
+library(tidyverse)
+library(openintro)
+```
+
+### Retrieve URL of the raw dataset from GitHub
+
+```{r code-chunk-label}
+url <- "https://raw.githubusercontent.com/pujaroy280/DATA607Week1/main/recent-grads.csv"
+```
+
+### Load the CSV dataset into a data frame
+
+```{r}
+data <- read.csv(url) # Data has 173 observations (rows) of 21 variables (columns)
+
+```
+
+### Display the first few rows of the dataset
+```{r}
+head(data)
+
+```
+
+### Summary statistics
+```{r}
+summary(data)
+```
+
+### Explore the structure of the dataset
+```{r}
+str(data)
+```
+```{r}
+# Select single column
+employed <- data$Employed
+
+# Select multiple columns
+jobs_data <- data[, c("College_jobs", "Non_college_jobs", "Low_wage_jobs")]
+
+print(employed)
+print(jobs_data)
+
+```
+
+```{r}
+# Change values in the Major column to lowercase
+data$Major <- tolower(data$Major)
+print(data)
+```
+
+### Create a scatter plot
+```{r}
+# Plot with x-axis labels without scientific notation
+ggplot(data = data, aes(x = Total, y = Major_category)) + 
+  geom_point() +
+  scale_x_continuous(labels = function(x) format(x, scientific = FALSE))
+
+```
+
+### Subsetting Data
+```{r}
+# Data frame is named 'data'
+# Subset data to include only rows where the Major_category is engineering
+engineering_data <- data[data$Major_category == "Engineering", ]
+
+# Get the count of rows in the subset data frame
+num_engineering <- nrow(engineering_data)
+
+# Print the count
+print(num_engineering)
+
+```
+
+```{r}
+# Data frame is named 'data'
+# Subset data to include only rows where the Major_category is education
+education_data <- data[data$Major_category == "Education", ]
+
+# Get the count of rows in the subset data frame
+num_education <- nrow(education_data)
+
+# Print the count
+print(num_education)
+```
+
+```{r}
+# Data frame is named 'data'
+# Subset data to include only rows where the Major_category is Biology & Life Science
+biolifesci_data <- data[data$Major_category == "Biology & Life Science", ]
+
+# Get the count of rows in the subset data frame
+num_biolifesci <- nrow(biolifesci_data)
+
+# Print the count
+print(num_biolifesci)
+```
+
+```{r}
+# Data frame is named 'data'
+# Subset data to include only rows where the Major_category is Arts
+arts_data <- data[data$Major_category == "Arts", ]
+
+# Get the count of rows in the subset data frame
+num_arts <- nrow(arts_data)
+
+# Print the count
+print(num_arts)
+```
+
+```{r}
+# Data frame is named 'data'
+# Subset data to include only rows where the Major_category is Psychology & Social Work
+psysocwork_data <- data[data$Major_category == "Psychology & Social Work", ]
+
+# Get the count of rows in the subset data frame
+num_psysocwork <- nrow(psysocwork_data)
+
+# Print the count
+print(num_psysocwork)
+```
+
+```{r}
+# Assuming your data frame is named 'data'
+# Subset data to include only rows where Major_category is Engineering
+engineering_data <- data[data$Major_category == "Engineering", ]
+
+# Sum the Women column to get the total number of women in engineering
+num_women_engineering <- sum(engineering_data$Women, na.rm = TRUE)
+
+# Print the count
+print(num_women_engineering)
+
+```
+
+```{r}
+# Assuming your data frame is named 'data'
+# Subset data to include only rows where Major_category is Engineering
+engineering_data <- data[data$Major_category == "Engineering", ]
+
+# Sum the Women column to get the total number of women in engineering
+num_men_engineering <- sum(engineering_data$Men, na.rm = TRUE)
+
+# Print the count
+print(num_men_engineering)
+
+```
+
+### Using ggplot2
+```{r}
+# Load necessary packages
+library(ggplot2)
+
+# Subset data to include only rows where Major_category is Engineering
+engineering_data <- data[data$Major_category == "Engineering", ]
+
+# Sum the Women and Men columns separately
+sum_women <- sum(engineering_data$Women, na.rm = TRUE)
+sum_men <- sum(engineering_data$Men, na.rm = TRUE)
+
+# Create a data frame for plotting
+gender_counts <- data.frame(Gender = c("Women", "Men"),
+                            Count = c(sum_women, sum_men))
+
+# Plot the counts
+ggplot(gender_counts, aes(x = Gender, y = Count, fill = Gender)) +
+  geom_bar(stat = "identity") +
+  geom_text(aes(label = Count), vjust = -0.5, color = "black", size = 3.5) +  # Add text labels
+  scale_fill_manual(values = c("lightblue", "pink")) +  # Change fill colors
+  labs(title = "Number of Women and Men in Engineering",
+       x = "Gender",
+       y = "Count") +
+  theme_minimal() +
+  scale_y_continuous(labels = function(y) format(y, scientific = FALSE))
+
+```
+
+```{r}
+# Load necessary packages
+library(ggplot2)
+
+# Subset data to include only rows where Major_category is Business
+business_data <- data[data$Major_category == "Business", ]
+
+# Sum the Women and Men columns separately
+sum_women <- sum(business_data$Women, na.rm = TRUE)
+sum_men <- sum(business_data$Men, na.rm = TRUE)
+
+# Create a data frame for plotting
+gender_counts <- data.frame(Gender = c("Women", "Men"),
+                            Count = c(sum_women, sum_men))
+
+# Plot the counts
+ggplot(gender_counts, aes(x = Gender, y = Count, fill = Gender)) +
+  geom_bar(stat = "identity") +
+  geom_text(aes(label = Count), vjust = -0.5, color = "black", size = 3.5) +  # Add text labels
+  scale_fill_manual(values = c("lightblue", "pink")) +  # Change fill colors
+  labs(title = "Number of Women and Men in Business",
+       x = "Gender",
+       y = "Count") +
+  theme_minimal() +
+  scale_y_continuous(labels = function(y) format(y, scientific = FALSE))
+
+```
+```{r}
+# Load necessary packages
+library(ggplot2)
+
+# Subset data to include only rows where Major_category is Education
+education_data <- data[data$Major_category == "Education", ]
+
+# Sum the Women and Men columns separately
+sum_women <- sum(education_data$Women, na.rm = TRUE)
+sum_men <- sum(education_data$Men, na.rm = TRUE)
+
+# Create a data frame for plotting
+gender_counts <- data.frame(Gender = c("Women", "Men"),
+                            Count = c(sum_women, sum_men))
+
+# Plot the counts
+ggplot(gender_counts, aes(x = Gender, y = Count, fill = Gender)) +
+  geom_bar(stat = "identity") +
+  geom_text(aes(label = Count), vjust = -0.5, color = "black", size = 3.5) +  # Add text labels
+  scale_fill_manual(values = c("lightblue", "pink")) +  # Change fill colors
+  labs(title = "Number of Women and Men in Education",
+       x = "Gender",
+       y = "Count") +
+  theme_minimal() +
+  scale_y_continuous(labels = function(y) format(y, scientific = FALSE))
+
+```
+```{r}
+# Load necessary packages
+library(ggplot2)
+
+# Subset data to include only rows where Major_category is Agriculture & Natural Resources
+agricnatres_data <- data[data$Major_category == "Agriculture & Natural Resources", ]
+
+# Sum the Women and Men columns separately
+sum_women <- sum(agricnatres_data$Women, na.rm = TRUE)
+sum_men <- sum(agricnatres_data$Men, na.rm = TRUE)
+
+# Create a data frame for plotting
+gender_counts <- data.frame(Gender = c("Women", "Men"),
+                            Count = c(sum_women, sum_men))
+
+# Plot the counts
+ggplot(gender_counts, aes(x = Gender, y = Count, fill = Gender)) +
+  geom_bar(stat = "identity") +
+  geom_text(aes(label = Count), vjust = -0.5, color = "black", size = 3.5) +  # Add text labels
+  scale_fill_manual(values = c("brown", "lightgreen")) +  # Change fill colors
+  labs(title = "Number of Women and Men in Agriculture & Natural Resources",
+       x = "Gender",
+       y = "Count") +
+  theme_minimal() +
+  scale_y_continuous(labels = function(y) format(y, scientific = FALSE))
+
+```
+
+### Conclusion
+Based on the data analysis conducted, I would like to work on analyzing and visualizing the how many men and women pursued majors related to STEM and how many candidates did off campus, low wage or college jobs. 
